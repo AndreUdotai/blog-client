@@ -183,10 +183,11 @@ postButton.addEventListener('click', () => {
         'http://localhost:3000/api/blog/post/' + postId + '/comment/create',
         commentData,
     ).then((data) => {
+        // If data contain errors
         if (data.errors) {
-            username.value = `${data.comment.username}`;
-            email.value = `${data.comment.email}`;
-            comment.value = `${data.comment.comment}`;
+            username.value  = `${data.comment.username}`;
+            email.value     = `${data.comment.email}`;
+            comment.value   = `${data.comment.comment}`;
 
             for (let error of data.errors.errors) {
                 if (error.param == 'email') {

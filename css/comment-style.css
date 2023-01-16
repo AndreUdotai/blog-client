@@ -1,0 +1,26 @@
+@media(min-width:568px){
+    .end{
+        margin-left: auto;
+    }
+}
+
+@media(max-width:768px){
+    #post{
+        width: 100%;
+    }
+}
+
+#post{
+    margin: 10px 0;
+}
+
+.form-group input,.form-group textarea{
+    border-radius: 5px;
+}
+
+form{
+    border: 1px solid rgba(16, 46, 46, 1);
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+ }

@@ -88,6 +88,10 @@ postList.addEventListener('click', (e) => {
             }
             // Set the comment count component as the first child of the commentsContainer element
             commentsContainer.innerHTML = commentCount;
+
+            // Reverse the order of the data.comments array to make the latest comment appear first
+            data.comments.reverse();
+
             // Loop over the comments in the comments array from the blog-api
             for (let comment of data.comments) {
                 // Create a new div element for a comment element

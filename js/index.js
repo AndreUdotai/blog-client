@@ -51,25 +51,12 @@ fetch('http://localhost:3000/api/blog/posts')
 // POST PAGE
 // ***************************************************************************
 
-// Create variables for the title, post and date elements
-let postTitle = document.getElementById('post_title');
-let postContent = document.getElementById('post_content');
-let postDate = document.getElementById('post_date');
-let comments = document.getElementById('comments');
-
-// Set a click event listener on the title of posts to extract the
-// id of the post and save in the postId variable
-postList.addEventListener('click', (e) => {
-    let postId = e.target.dataset.id;
-
-    postButton.dataset.id = `${postId}`;
-
-    comments.innerHTML = '';
-    let commentsContainer = document.createElement('div');
-
+// fetch post function for retrieving a particular post when the
+// id is supplied
+let fetchPost = (id) => {
     // Use the extracted id saved in postId to fetch the full detail of
     // the post from the database
-    fetch('http://localhost:3000/api/blog/post/' + postId)
+    fetch('http://localhost:3000/api/blog/post/' + id)
         .then((response) => response.json())
         .then((data) => {
             // Insert returned data as inner contents of the created variables
@@ -77,6 +64,9 @@ postList.addEventListener('click', (e) => {
             postContent.innerText = data.post.post;
             postDate.innerText = data.post.timestamp;
 
+            // Clear the comments node
+            comments.innerHTML = '';
+            let commentsContainer = document.createElement('div');
             // Declare a variable for comment count component
             let commentCount;
             if (data.comments.length === 0) {
@@ -120,12 +110,30 @@ postList.addEventListener('click', (e) => {
             // Append commentsContainer to the comments element
             comments.appendChild(commentsContainer);
         });
+};
+
+// Create variables for the title, post and date elements
+let postTitle = document.getElementById('post_title');
+let postContent = document.getElementById('post_content');
+let postDate = document.getElementById('post_date');
+let comments = document.getElementById('comments');
+
+// Set a click event listener on the title of posts to extract the
+// id of the post and save in the postId variable
+postList.addEventListener('click', (e) => {
+    // Extract the post id from the post dataset
+    let postId = e.target.dataset.id;
+    // Set the postId value as the dataset value of the comment post button
+    postButton.dataset.id = `${postId}`;
+
+    // Call the fetch post function
+    fetchPost(postId);
 });
 
 // Select the error message divs from the comment form
-let emailError      = document.getElementById('emailErrorMessage');
-let commentError    = document.getElementById('commentErrorMessage');
-let usernameError   = document.getElementById('usernameErrorMessage');
+let emailError = document.getElementById('emailErrorMessage');
+let commentError = document.getElementById('commentErrorMessage');
+let usernameError = document.getElementById('usernameErrorMessage');
 
 // When User clicks on the comment post button to leave a comment
 postButton.addEventListener('click', () => {
@@ -171,21 +179,23 @@ postButton.addEventListener('click', () => {
         'http://localhost:3000/api/blog/post/' + postId + '/comment/create',
         commentData,
     ).then((data) => {
-        console.log(data.comment)
-        if(data.errors){
-            username.value  = `${data.comment.username}`;
-            email.value     = `${data.comment.email}`;
-            comment.value   = `${data.comment.comment}`;
+        if (data.errors) {
+            username.value = `${data.comment.username}`;
+            email.value = `${data.comment.email}`;
+            comment.value = `${data.comment.comment}`;
 
-            for(let error of data.errors.errors){
-                if(error.param == 'email'){
+            for (let error of data.errors.errors) {
+                if (error.param == 'email') {
                     emailError.innerText = error.msg;
-                } else if (error.param == 'comment'){
+                } else if (error.param == 'comment') {
                     commentError.innerText = error.msg;
-                } else if (error.param == 'username'){
+                } else if (error.param == 'username') {
                     usernameError.innerText = error.msg;
                 }
             }
+        } else {
+            // Call the fetch post function to display the latest comment
+            fetchPost(postId);
         }
     });
 });

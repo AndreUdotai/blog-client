@@ -102,7 +102,7 @@
                 </div>
             </div>
         </article>
-        
+
         <!-- Main Body -->
         <section>
             <div class="container">
@@ -113,16 +113,21 @@
                             <div class="form-group">
                                 <h4>Leave a comment</h4>
                                 <label for="message">Comment</label>
-                                <textarea name="msg" id="comment" msg cols="30" rows="5" class="form-control">
-                        </textarea>
+                                <textarea name="msg" id="comment" msg cols="30" rows="5" class="form-control"></textarea>
+                                <div class="errorMessage" id="commentErrorMessage"></div>
                             </div>
                             <div class="form-group">
                                 <label for="name">Username</label>
-                                <input type="text" name="username" id="username" class="form-control">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="inputGroupPrepend2">@</span>
+                                    <input type="text" name="username" id="username" class="form-control">
+                                </div>
+                                <div class="errorMessage" id="usernameErrorMessage"></div>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="text" name="email" id="email" class="form-control">
+                                <div class="errorMessage" id="emailErrorMessage"></div>
                             </div>
                             <div class="form-group mt-2">
                                 <button type="button" id="post_button" class="btn btn-primary">Post Comment</button>

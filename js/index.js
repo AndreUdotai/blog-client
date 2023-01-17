@@ -105,7 +105,7 @@ postList.addEventListener('click', (e) => {
                         <div class="user d-flex flex-row align-items-center">
                             <img src="https://i.imgur.com/CFpa3nK.jpg" alt="" class="rounded-circle" width="40"
                                 height="40">
-                            <span><small class="font-weight-bold text-primary">${comment.username}</small>
+                            <span><small class="font-weight-bold text-primary">@${comment.username}</small>
                                 <small class="font-weight-bold">${comment.comment}</small></span>
                         </div>
                         <small>${comment.timestamp}</small>
@@ -122,9 +122,22 @@ postList.addEventListener('click', (e) => {
         });
 });
 
+// Select the error message divs from the comment form
+let emailError      = document.getElementById('emailErrorMessage');
+let commentError    = document.getElementById('commentErrorMessage');
+let usernameError   = document.getElementById('usernameErrorMessage');
+
+// When User clicks on the comment post button to leave a comment
 postButton.addEventListener('click', () => {
+    // Set the value of the displayed post id to the variable postId
     let postId = postButton.dataset.id;
 
+    // Set the error displays on comment form if any to empty
+    emailError.innerText = '';
+    commentError.innerText = '';
+    usernameError.innerText = '';
+
+    // THe fetch function with all the headers
     async function postData(url = '', data = {}) {
         const response = await fetch(url, {
             method: 'POST',
@@ -141,10 +154,7 @@ postButton.addEventListener('click', () => {
         return response.json(); // parses JSON response into native JavaScript objects
     }
 
-    let comment     = document.getElementById('comment');
-    let username    = document.getElementById('username');
-    let email       = document.getElementById('email');
-
+    // Initializing a comment object from entered data by the user
     let commentData = {
         username: username.value,
         email: email.value,
@@ -161,6 +171,21 @@ postButton.addEventListener('click', () => {
         'http://localhost:3000/api/blog/post/' + postId + '/comment/create',
         commentData,
     ).then((data) => {
-        console.log(data); // JSON data parsed by `data.json()` call
+        console.log(data.comment)
+        if(data.errors){
+            username.value  = `${data.comment.username}`;
+            email.value     = `${data.comment.email}`;
+            comment.value   = `${data.comment.comment}`;
+
+            for(let error of data.errors.errors){
+                if(error.param == 'email'){
+                    emailError.innerText = error.msg;
+                } else if (error.param == 'comment'){
+                    commentError.innerText = error.msg;
+                } else if (error.param == 'username'){
+                    usernameError.innerText = error.msg;
+                }
+            }
+        }
     });
 });

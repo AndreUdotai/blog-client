@@ -1,8 +1,11 @@
 // ***************************************************************************
 // INDEX PAGE
 // ***************************************************************************
-let postList = document.getElementById('post-list');
-let postButton = document.getElementById('post_button');
+let indexPage   = document.getElementById('index-page');
+let postPage    = document.getElementById('post-detail-page');
+
+let postList    = document.getElementById('post-list');
+let postButton  = document.getElementById('post_button');
 
 // Fetch all the posts from blog-api
 fetch('http://localhost:3000/api/blog/posts')
@@ -122,14 +125,17 @@ let comments = document.getElementById('comments');
 // id of the post and save in the postId variable
 postList.addEventListener('click', (e) => {
     // Checks if the post title is clicked
-    if (e.target.hasAttribute('data-id')){
-    // Extract the post id from the post dataset
-    let postId = e.target.dataset.id;
-    // Set the postId value as the dataset value of the comment post button
-    postButton.dataset.id = `${postId}`;
+    if (e.target.hasAttribute('data-id')) {
+        indexPage.setAttribute("class", "hide");
+        postPage.removeAttribute("class");
 
-    // Call the fetch post function
-    fetchPost(postId);
+        // Extract the post id from the post dataset
+        let postId = e.target.dataset.id;
+        // Set the postId value as the dataset value of the comment post button
+        postButton.dataset.id = `${postId}`;
+
+        // Call the fetch post function
+        fetchPost(postId);
     }
 });
 
@@ -174,9 +180,9 @@ postButton.addEventListener('click', () => {
     };
 
     // Clear comment form after submission
-    username.value  = '';
-    email.value     = '';
-    comment.value   = '';
+    username.value = '';
+    email.value = '';
+    comment.value = '';
 
     postData(
         'http://localhost:3000/api/blog/post/' + postId + '/comment/create',

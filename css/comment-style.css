@@ -29,3 +29,7 @@ form{
     color: red;
     font-size: 0.8rem;
 }
+
+.hide {
+    display: none;
+}

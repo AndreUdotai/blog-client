@@ -34,7 +34,7 @@ fetch('http://localhost:3000/api/blog/posts')
                 </a>
                 <p class='post-meta'>
                     Posted by
-                    <a href='#!'>Admin</a>
+                    <a href='about.html'>Admin</a>
                     <span>${post.timestamp}</span>
                 </p>
             </div>
@@ -121,6 +121,8 @@ let comments = document.getElementById('comments');
 // Set a click event listener on the title of posts to extract the
 // id of the post and save in the postId variable
 postList.addEventListener('click', (e) => {
+    // Checks if the post title is clicked
+    if (e.target.hasAttribute('data-id')){
     // Extract the post id from the post dataset
     let postId = e.target.dataset.id;
     // Set the postId value as the dataset value of the comment post button
@@ -128,6 +130,7 @@ postList.addEventListener('click', (e) => {
 
     // Call the fetch post function
     fetchPost(postId);
+    }
 });
 
 // Select the error message divs from the comment form

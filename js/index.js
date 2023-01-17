@@ -1,8 +1,8 @@
-
 // ***************************************************************************
 // INDEX PAGE
 // ***************************************************************************
 let postList = document.getElementById('post-list');
+let postButton = document.getElementById('post_button');
 
 // Fetch all the posts from blog-api
 fetch('http://localhost:3000/api/blog/posts')
@@ -52,36 +52,36 @@ fetch('http://localhost:3000/api/blog/posts')
 // ***************************************************************************
 
 // Create variables for the title, post and date elements
-let postTitle   = document.getElementById('post_title');
+let postTitle = document.getElementById('post_title');
 let postContent = document.getElementById('post_content');
-let postDate    = document.getElementById('post_date');
-let comments    = document.getElementById('comments');
+let postDate = document.getElementById('post_date');
+let comments = document.getElementById('comments');
 
 // Set a click event listener on the title of posts to extract the
 // id of the post and save in the postId variable
 postList.addEventListener('click', (e) => {
     let postId = e.target.dataset.id;
 
+    postButton.dataset.id = `${postId}`;
+
     comments.innerHTML = '';
     let commentsContainer = document.createElement('div');
 
-    // Use the extracted id saved in postId to fetch the full detail of 
+    // Use the extracted id saved in postId to fetch the full detail of
     // the post from the database
     fetch('http://localhost:3000/api/blog/post/' + postId)
         .then((response) => response.json())
         .then((data) => {
-
-
             // Insert returned data as inner contents of the created variables
-            postTitle.innerText     = data.post.title;
-            postContent.innerText   = data.post.post;
-            postDate.innerText      = data.post.timestamp;
+            postTitle.innerText = data.post.title;
+            postContent.innerText = data.post.post;
+            postDate.innerText = data.post.timestamp;
 
             // Declare a variable for comment count component
             let commentCount;
-            if(data.comments.length === 0){
+            if (data.comments.length === 0) {
                 commentCount = 'No Comments';
-            } else if (data.comments.length === 1){
+            } else if (data.comments.length === 1) {
                 commentCount = `<div>${data.comments.length} Comment</div>`;
             } else {
                 commentCount = `<div>${data.comments.length} Comments</div>`;
@@ -89,7 +89,7 @@ postList.addEventListener('click', (e) => {
             // Set the comment count component as the first child of the commentsContainer element
             commentsContainer.innerHTML = commentCount;
             // Loop over the comments in the comments array from the blog-api
-            for (let comment of data.comments){
+            for (let comment of data.comments) {
                 // Create a new div element for a comment element
                 let commentElement = document.createElement('div');
 
@@ -118,4 +118,40 @@ postList.addEventListener('click', (e) => {
         });
 });
 
+postButton.addEventListener('click', () => {
+    let postId = postButton.dataset.id;
 
+    async function postData(url = '', data = {}) {
+        const response = await fetch(url, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(data),
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    let comment = document.getElementById('comment');
+    let username = document.getElementById('username');
+    let email = document.getElementById('email');
+
+    let commentData = {
+        username: username.value,
+        email: email.value,
+        comment: comment.value,
+        post: postId,
+    };
+
+    postData(
+        'http://localhost:3000/api/blog/post/' + postId + '/comment/create',
+        commentData,
+    ).then((data) => {
+        console.log(data); // JSON data parsed by `data.json()` call
+    });
+});

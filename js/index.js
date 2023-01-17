@@ -141,9 +141,9 @@ postButton.addEventListener('click', () => {
         return response.json(); // parses JSON response into native JavaScript objects
     }
 
-    let comment = document.getElementById('comment');
-    let username = document.getElementById('username');
-    let email = document.getElementById('email');
+    let comment     = document.getElementById('comment');
+    let username    = document.getElementById('username');
+    let email       = document.getElementById('email');
 
     let commentData = {
         username: username.value,
@@ -151,6 +151,11 @@ postButton.addEventListener('click', () => {
         comment: comment.value,
         post: postId,
     };
+
+    // Clear comment form after submission
+    username.value  = '';
+    email.value     = '';
+    comment.value   = '';
 
     postData(
         'http://localhost:3000/api/blog/post/' + postId + '/comment/create',

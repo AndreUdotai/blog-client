@@ -38,7 +38,7 @@ fetch('http://localhost:3000/api/blog/posts')
                 <p class='post-meta'>
                     Posted by
                     <a href='about.html'>Admin</a>
-                    <span>${post.timestamp}</span>
+                    <span>${dayjs(post.timestamp)}</span>
                 </p>
             </div>
             <hr class="my-4" />
@@ -65,7 +65,7 @@ let fetchPost = (id) => {
             // Insert returned data as inner contents of the created variables
             postTitle.innerText = data.post.title;
             postContent.innerText = data.post.post;
-            postDate.innerText = data.post.timestamp;
+            postDate.innerText = dayjs(data.post.timestamp);
 
             // Clear the comments node
             comments.innerHTML = '';
@@ -101,12 +101,12 @@ let fetchPost = (id) => {
                             <span><small class="font-weight-bold text-primary">@${comment.username}</small>
                                 <small class="font-weight-bold">${comment.comment}</small></span>
                         </div>
-                        <small>${comment.timestamp}</small>
+                        <small>${dayjs(comment.timestamp)}</small>
                     </div>
                 </div>
                 `;
                 commentElement.innerHTML = commentComponent;
-
+                // dayjs(post.timeStamp).toNow(true)
                 // Append commentElement to the commentsContainer element
                 commentsContainer.appendChild(commentElement);
             }

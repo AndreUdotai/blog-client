@@ -1,13 +1,7 @@
-// ***************************************************************************
-// INDEX PAGE
-// ***************************************************************************
-let indexPage   = document.getElementById('index-page');
-let postPage    = document.getElementById('post-detail-page');
 
-let postList    = document.getElementById('post-list');
-let postButton  = document.getElementById('post_button');
 
-// Fetch all the posts from blog-api
+// When the index page is loaded (When website loads),
+// Fetch all the posts from blog-api to be displayed on the index page
 fetch('http://localhost:3000/api/blog/posts')
     .then((response) => response.json())
     .then((data) => {
@@ -21,6 +15,8 @@ fetch('http://localhost:3000/api/blog/posts')
         // Reverse the order of the posts in the array to make the latest
         // post appears first
         posts.reverse();
+        // Reference the post list element - this is will the parenet element for the posts
+        let postList = document.getElementById('post-list');
         // Loop over the posts in the posts array
         for (let post of posts) {
             // Create a new div element for a post element
@@ -28,21 +24,19 @@ fetch('http://localhost:3000/api/blog/posts')
 
             // Set the posts-display html below as the inner element of
             // the newly created div element
-            let postListComponent = `
-            <div class='post-preview'>
-                <a href='#'id='post-title'>
-                    <h2 class='post-title' data-id='${post._id}' >
-                        ${post.title}
-                    </h2>
-                </a>
-                <p class='post-meta'>
-                    Posted by
-                    <a href='about.html'>Admin</a>
-                    <span>${dayjs(post.timestamp)}</span>
-                </p>
-            </div>
-            <hr class="my-4" />
-            `;
+            let postListComponent = `<div class='post-preview'>
+                                        <a href='#'id='post-title'>
+                                            <h2 class='post-title' data-id='${post._id}' >
+                                                ${post.title}
+                                            </h2>
+                                        </a>
+                                        <p class='post-meta'>
+                                            Posted by
+                                            <a href='about.html'>Admin</a>
+                                            <span>${dayjs(post.timestamp)}</span>
+                                        </p>
+                                    </div>
+                                    <hr class="my-4" />`;
             postElement.innerHTML = postListComponent;
 
             // Append the posts component on the postList element
@@ -50,11 +44,8 @@ fetch('http://localhost:3000/api/blog/posts')
         }
     });
 
-// ***************************************************************************
-// POST PAGE
-// ***************************************************************************
 
-// fetch post function for retrieving a particular post when the
+// Fetch post function for retrieving a particular post when the
 // id is supplied
 let fetchPost = (id) => {
     // Use the extracted id saved in postId to fetch the full detail of
@@ -92,19 +83,18 @@ let fetchPost = (id) => {
 
                 // Set the comments-display html below as the inner element of
                 // the newly created div element
-                let commentComponent = `
-                <div class="card p-3 mt-2">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="user d-flex flex-row align-items-center">
-                            <img src="https://i.imgur.com/CFpa3nK.jpg" alt="" class="rounded-circle" width="40"
-                                height="40">
-                            <span><small class="font-weight-bold text-primary">@${comment.username}</small>
-                                <small class="font-weight-bold">${comment.comment}</small></span>
-                        </div>
-                        <small>${dayjs(comment.timestamp)}</small>
-                    </div>
-                </div>
-                `;
+                let commentComponent = `<div class="card p-3 mt-2">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="user d-flex flex-row align-items-center">
+                                                    <img src="https://i.imgur.com/CFpa3nK.jpg" alt="" class="rounded-circle" width="40"
+                                                        height="40">
+                                                    <span><small class="font-weight-bold text-primary">@${comment.username}</small>
+                                                        <small class="font-weight-bold">${comment.comment}</small></span>
+                                                </div>
+                                                <small>${dayjs(comment.timestamp)}</small>
+                                            </div>
+                                        </div>`;
+
                 commentElement.innerHTML = commentComponent;
                 // dayjs(post.timeStamp).toNow(true)
                 // Append commentElement to the commentsContainer element
@@ -123,18 +113,22 @@ let comments = document.getElementById('comments');
 
 // Set a click event listener on the title of posts to extract the
 // id of the post and save in the postId variable
+let postList    = document.getElementById('post-list');
 postList.addEventListener('click', (e) => {
     // Checks if the post title is clicked
     if (e.target.hasAttribute('data-id')) {
+        let indexPage   = document.getElementById('index-page');
         indexPage.setAttribute("class", "hide");
+        let postPage    = document.getElementById('post-detail-page');
         postPage.removeAttribute("class");
 
         // Extract the post id from the post dataset
         let postId = e.target.dataset.id;
         // Set the postId value as the dataset value of the comment post button
+        let postButton  = document.getElementById('post_button');
         postButton.dataset.id = `${postId}`;
 
-        // Call the fetch post function
+        // Call the fetch post function for the clicked post
         fetchPost(postId);
     }
 });
@@ -145,6 +139,7 @@ let commentError = document.getElementById('commentErrorMessage');
 let usernameError = document.getElementById('usernameErrorMessage');
 
 // When User clicks on the comment post button to leave a comment
+let postButton  = document.getElementById('post_button');
 postButton.addEventListener('click', () => {
     // Set the value of the displayed post id to the variable postId
     let postId = postButton.dataset.id;

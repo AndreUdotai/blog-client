@@ -9,8 +9,10 @@ fetch('http://localhost:3000/api/blog/posts')
         let posts = [];
         // Loop over the posts json data returned from blog-api
         for (let element of data) {
+            if(element.published){
             // Push all the posts returned from blog-api in posts array
             posts.push(element);
+            }
         }
         // Reverse the order of the posts in the array to make the latest
         // post appears first
